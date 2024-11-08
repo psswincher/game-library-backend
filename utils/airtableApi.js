@@ -1,12 +1,17 @@
 const Airtable = require('airtable');
+require("dotenv").config();
+
+//TODO we really should only be fetching records that have an update that is more recent than the most recent pull
+// .select() does take a filter method. maybe we could store the last fetch date here in the backend
+// create a 'last modified' field in airtable that only watches fields pertinent to the site
+// and then filter based on that? can't wait to build a filter that works with dates /s
 
 class AirtableAPI {
-    constructor({baseId}) {
-        // this._baseUrl = 'http://api.airtable.com/v0';
+    constructor({baseId, airtableAccessKey}) {
         this._baseId = baseId;
         Airtable.configure({
             endpointUrl: 'https://api.airtable.com',
-            apiKey: 'patlHvHC6cTgXzbkX.f7dd13204854ec51e8bf6aa14b02be312ac3c672418a9b0d4644c96ce16b05db'
+            apiKey: airtableAccessKey
         });
         this._base = Airtable.base(this._baseId);
     }
@@ -21,9 +26,8 @@ class AirtableAPI {
                 );
         });    
     }
-
     
         
     }
 
-module.exports.airtable = new AirtableAPI({baseId: 'appWhFvxIlwhphrOL'});
+module.exports.airtable = new AirtableAPI({baseId: process.env.AIRTABLE_BASE_ID, airtableAccessKey: process.env.AIRTABLE_ACCESS_KEY});

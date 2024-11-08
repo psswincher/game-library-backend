@@ -46,8 +46,12 @@ const gameScheme = new mongoose.Schema({
     max: 10,
     required: true,
   },
+  imageUrl: {
+    type: URL,
+    required: true,
+  },
 
-  imageFileId: { type: mongoose.Schema.Types.ObjectId, ref: "fs.files", required: true } 
+//   imageFileId: { type: mongoose.Schema.Types.ObjectId, ref: "fs.files", required: true } 
 });
 
 module.exports = mongoose.model("game", gameScheme);

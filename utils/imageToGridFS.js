@@ -5,31 +5,8 @@ const mongoose = require("mongoose");
 const uri = "mongodb://localhost:27017";  // Replace with your MongoDB URI
 const dbName = "gamelibrary_db";
 
-let gfsBucket;
 
-async function connectDB() {
-    try {
-        
-        // await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-        await mongoose.connect(uri+"/"+dbName);
-        const conn = mongoose.connection;
-        conn.once("open", () => {
-            gfsBucket = new GridFSBucket(conn.db, { bucketName: "images" });
-            console.log("Connected to MongoDB and initialized GridFS");
-        });
-    } catch (error) {
-        console.error("MongoDB connection error:", error);
-    }
-}
-
-function getGfsBucket() {
-    if (!gfsBucket) {
-        throw new Error("GridFSBucket is not initialized");
-    }
-    return gfsBucket;
-}
-
-async function uploadImageToGridFS(url, filename) {
+async function uploadImageToGridFS(url, filename, gfsBucket) {
     return new Promise((resolve, reject) => {
         https.get(url, (response) => {
             const uploadStream = gfsBucket.openUploadStream(filename);
@@ -45,4 +22,4 @@ async function uploadImageToGridFS(url, filename) {
     });
 }
 
-module.exports = {uploadImageToGridFS, connectDB, getGfsBucket }
+module.exports = { uploadImageToGridFS }

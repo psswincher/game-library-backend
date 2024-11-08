@@ -1,6 +1,6 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const {connectDB } = require("./utils/imageToGridFS");
+const { mongoose  } = require("mongoose");
+const { GridFSBucket } = require("mongodb");
 // const cors = require("cors");
 const bodyParser = require("body-parser");
 // const { errors } = require("celebrate");
@@ -11,10 +11,16 @@ const { rateLimit } = require("express-rate-limit");
 const {airtable} = require("./utils/airtableApi");
 const {GameManager} = require("./utils/gameLibrary");
 
-connectDB();
-airtable.fetchTableRecords("tblw2Gr10ycjHuk5N").then((res) => {
-  // console.log(res)
-  GameManager.updateLibrary(res);
+//set up mongodb and establish gridFS connection to store images
+let gfsBucket;
+mongoose.connect("mongodb://127.0.0.1:27017/gamelibrary_db");
+const mongoConnection = mongoose.connection;
+
+mongoConnection.once("open", ()=> {
+  gfsBucket = new GridFSBucket(mongoConnection.db, { bucketName: "images" });
+  airtable.fetchTableRecords("tblw2Gr10ycjHuk5N").then((res) => {
+  GameManager.updateLibrary(res, gfsBucket);
+  });
 });
 
 const limiter = rateLimit({
@@ -31,7 +37,6 @@ const { errorHandler } = require("./middlewares/errorHandler");
 const { PORT = 3001 } = process.env;
 
 const app = express();
-// mongoose.connect("mongodb://127.0.0.1:27017/gamelibrary_db");
 // app.use(cors());
 // app.use(helmet());
 

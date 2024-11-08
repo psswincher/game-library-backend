@@ -26,7 +26,9 @@ class FormattedGame {
         this.shortDescription = game.fields.Description_Slug;
         this.rating = game.fields.rating;
         // this.imageId = game.fields["Game Image"][0].id;
-        this.imageUrl = game.fields["Game Image"][0].url
+        this.airtableImageUrl = game.fields["Game Image"][0].url;
+        this.airtableImageId = game.fields["Game Image"][0].id;
+        this.imageId = this._id + "_" + this.airtableImageId;
     };
 }
 
