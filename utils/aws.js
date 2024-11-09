@@ -1,43 +1,45 @@
 require("dotenv").config();
-const AWS = require("aws-sdk");
-const { PassThrough } = require('stream');
+const { S3Client } = require("@aws-sdk/client-s3");
+const { Upload } = require("@aws-sdk/lib-storage");
+const https = require("https");
 
-AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION
-});
+const s3Client = new S3Client({ region: process.env.AWS_REGION });
 
-const s3 = new AWS.S3();
+async function uploadImageFromAirtableToS3(game) {
+  return new Promise((resolve, reject) => {
+    console.log(game.airtableImageUrl);
 
-export async function uploadImageFromAirtableToS3(airtableUrl, filename) {
-    return new Promise((resolve, reject) => {
-        https.get(airtableUrl, (response) => {
-            if (response.statusCode !== 200) {
-                reject(new Error(`Failed to fetch image: ${response.statusCode}`));
-                return;
-            }
+    https
+      .get(game.airtableImageUrl, (response) => {
+        if (response.statusCode !== 200) {
+          reject(new Error(`Failed to get image: ${response.statusCode}`));
+          return;
+        }
 
-            const uploadStream = new PassThrough();
-            const s3Params = {
-                Bucket: process.env.AWS_BUCKET_NAME,
-                Key: filename,
-                Body: uploadStream,
-                ContentType: response.headers['image/jpeg'],
-                ACL: 'public-read' 
-            };
+        const s3Params = {
+          Bucket: process.env.S3_BUCKET_NAME,
+          Key: game._id,
+          Body: response,
+          ContentType: game.imageType,
+          Metadata: { name: game.imageFileName },
+        };
 
-            s3.upload(s3Params, (error, data) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(data.Location);
-                }
-            });
-
-            response.pipe(uploadStream);
-        }).on("error", (error) => {
-            reject(error);
+        const upload = new Upload({
+          client: s3Client,
+          params: s3Params,
         });
-    });
+
+        upload
+          .done()
+          .then((data) => {
+            resolve(data.Location);
+          })
+          .catch((err) => reject(err));
+      })
+      .on("error", (err) => {
+        reject(new Error(`Failed to get image: ${err.message}`));
+      });
+  });
 }
+
+module.exports = { uploadImageFromAirtableToS3 };

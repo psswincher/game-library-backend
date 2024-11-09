@@ -1,4 +1,4 @@
-//game manager is a singleton class that 
+//game manager is a singleton class that
 
 const { gameAdapter, FormattedGame } = require("./GameAdapter");
 const Game = require("../models/game");
@@ -10,42 +10,44 @@ const { uploadImageFromAirtableToS3 } = require("./aws");
 //for now, it is only geared towards sending data to airtable.
 
 module.exports.GameManager = {
+  updateLibrary: async function (games, gfsBucket) {
+    const bulkOperations = [];
+    const count = await Game.countDocuments();
+    console.log(`Connected to: ${Game.db.host}:${Game.db.port}`);
+    console.log(`Document count before bulkWrite: ${count}`);
+    for (const rawGame of games) {
+      //formats game data into something more dev friendly. Can be updated if we change how we handle the backend interface
+      let game = gameAdapter(rawGame);
 
-    updateLibrary: async function(games, gfsBucket) {
-        const bulkOperations = [];
-        const count = await Game.countDocuments();
-        console.log(`Connected to: ${Game.db.host}:${Game.db.port}`);
-console.log(`Document count before bulkWrite: ${count}`);
-        for (const rawGame of games) {
-           
-            //formats game data into something more dev friendly. Can be updated if we change how we handle the backend interface
-            let game = gameAdapter(rawGame);
-            
-            if(game instanceof FormattedGame) {
-                // console.log(game);
+      if (game instanceof FormattedGame) {
+        // console.log(game);
 
-                if (game.imageUrl) {
-                    const fileId = uploadImageFromAirtableToS3(game.airtableImageUrl, game.imageId, game._id)
-                    // const fileId = await uploadImageToGridFS(game.imageUrl, game.recordId, gfsBucket);
-                    game.imageFileId = fileId;
-                }
-
-                bulkOperations.push({
-                    updateOne: {
-                        filter: {_id: game._id},
-                        update: {...game},
-                        upsert: true
-                    }
-                });
+        if (game.airtableImageUrl) {
+          uploadImageFromAirtableToS3(game)
+            .then((imageUrl) => {
+              console.log(imageUrl);
+              game.imageUrl = imageUrl;
+            })
+            .catch((err) => console.log(err));
+          // const fileId = await uploadImageToGridFS(game.imageUrl, game.recordId, gfsBucket);
         }
-        };
-        console.log("Bulk operations:", bulkOperations);
-        
-        try {
-            const result = await Game.bulkWrite(bulkOperations);
-            console.log("BulkWrite Result:", result);
-        } catch (error) {
-            console.error("BulkWrite Error:", error);
-        }
+
+        bulkOperations.push({
+          updateOne: {
+            filter: { _id: game._id },
+            update: { ...game },
+            upsert: true,
+          },
+        });
+      }
     }
-}
+    console.log("Bulk operations:", bulkOperations);
+
+    try {
+      const result = await Game.bulkWrite(bulkOperations);
+      console.log("BulkWrite Result:", result);
+    } catch (error) {
+      console.error("BulkWrite Error:", error);
+    }
+  },
+};

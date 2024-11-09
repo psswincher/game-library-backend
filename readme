@@ -1,9 +1,5 @@
 Theory of Operations:
+
 1. We manage an Airtable base of board games. Airtable is very easy for us to use on site and saves us the pain of building an entire custom frontend geared towards employees.
 
-2. This backend is the intermediary between Airtable and the frontend. It pulls game data and images stored in Airtable, formats it into something dev friendly, and then sends it to the frontend. This ensures we don't expose Airtable credentials on the frontend while also seperating all of the data management concerns inherent to using a third party service.
-    2a. We can't create a direct socket connection to airtable to freely pass image data back and forth. Instead, airtable provides us with download urls for each image on request. Those urls expire every two hours.
-    2b. I'm reading that best practices here would be for this backend to upload the images to an AWS server and then store reference links in mongodb, but I don't want to deal with managing another cloud service. I spent 3-4 hours trying to set up an AWS solution and I don't even think I identified the proper tutorial for doing so. I think most AWS documentation doesn't use nodejs anymore? Either way, I'm not googling the right thing, and it feels even more outside the scope of this project.
-    2c As such, whenever we pull game data from airtable we also upload images to mongodb using gfsBucket. Those images are then ported to the frontend.
-
-3. This backend also manages a secure database of user login info.
+2. This backend pulls game data from airtable, including image download urls. It passes the game data to mongodb and uploads the images to an AWS S3 server.

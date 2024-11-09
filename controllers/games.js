@@ -5,7 +5,7 @@ const {
   RESOURCE_NOT_FOUND,
   FORBIDDEN_REQUEST,
 } = require("../utils/errors");
-
+const { uploadImageFromAirtableToS3 } = require("../utils/aws");
 
 //TO DO - eventually, we will need to only fetch games that are out of date/have new data
 //I think this will be frontend logic that checks metadata for last access data?
@@ -13,22 +13,19 @@ const {
 module.exports.getGames = (req, res, next) => {
   Game.find({})
     .then((games) => {
-
       return games.map((game) => {
-        if(game.imageId) {
-          const imageStream = gfsBucket.openDownloadStream(mongoose.Types.ObjectId(game.imageId));
-          
-          const chunks = [];
-          for await (const chunk of imageStream) {
-          chunks.push(chunk);
+        if (game.imageId) {
+          //   const imageStream = gfsBucket.openDownloadStream(mongoose.Types.ObjectId(game.imageId));
+          //   const chunks = [];
+          //   for await (const chunk of imageStream) {
+          //   chunks.push(chunk);
+          // }
+          // game.imageData = Buffer.concat(chunks).toString("base64");
         }
-        
-        game.imageData = Buffer.concat(chunks).toString("base64");
-        }
-        
-      }) 
-    }).then((games) => {
-      res.send({data: games});
+      });
+    })
+    .then((games) => {
+      res.send({ data: games });
     })
     .catch(next);
 };

@@ -3,20 +3,25 @@ const validator = require("validator");
 
 const gameScheme = new mongoose.Schema({
   _id: String,
-    gameLength: {
+  gameLength: {
     type: String,
-    enum: ["Short (~15 Mins)", "Medium (~45 Mins)","Long (1-2 Hours)","Epic (2+ hours)"],
-    required: true
+    enum: [
+      "Short (~15 Mins)",
+      "Medium (~45 Mins)",
+      "Long (1-2 Hours)",
+      "Epic (2+ hours)",
+    ],
+    required: true,
   },
   title: {
     type: String,
     min: 2,
     max: 30,
-    required: true
+    required: true,
   },
   category: {
     type: String,
-    enum: ["Competitive", "Cooperative", "Deception","Social"],
+    enum: ["Competitive", "Cooperative", "Deception", "Social"],
     required: true,
   },
   status: {
@@ -47,11 +52,12 @@ const gameScheme = new mongoose.Schema({
     required: true,
   },
   imageUrl: {
-    type: URL,
+    type: String,
+    min: 2,
     required: true,
   },
 
-//   imageFileId: { type: mongoose.Schema.Types.ObjectId, ref: "fs.files", required: true } 
+  //   imageFileId: { type: mongoose.Schema.Types.ObjectId, ref: "fs.files", required: true }
 });
 
 module.exports = mongoose.model("game", gameScheme);
