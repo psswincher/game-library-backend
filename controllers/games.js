@@ -1,29 +1,17 @@
 const Game = require("../models/game");
-const gfsBucket = require("../utils/imageToGridFS");
 const {
   BAD_REQUEST,
   RESOURCE_NOT_FOUND,
   FORBIDDEN_REQUEST,
 } = require("../utils/errors");
-const { uploadImageFromAirtableToS3 } = require("../utils/aws");
+// const { uploadImageFromAirtableToS3 } = require("../utils/aws");
 
 //TO DO - eventually, we will need to only fetch games that are out of date/have new data
 //I think this will be frontend logic that checks metadata for last access data?
 //otherwise this could launch like 100-200 download streams to get all images all at once?
 module.exports.getGames = (req, res, next) => {
+  console.log("getGames called by query");
   Game.find({})
-    .then((games) => {
-      return games.map((game) => {
-        if (game.imageId) {
-          //   const imageStream = gfsBucket.openDownloadStream(mongoose.Types.ObjectId(game.imageId));
-          //   const chunks = [];
-          //   for await (const chunk of imageStream) {
-          //   chunks.push(chunk);
-          // }
-          // game.imageData = Buffer.concat(chunks).toString("base64");
-        }
-      });
-    })
     .then((games) => {
       res.send({ data: games });
     })

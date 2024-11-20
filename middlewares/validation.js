@@ -23,7 +23,6 @@ const validateUserEmail = (value, helpers) => {
 //   return helpers.error("string.uri");
 // };
 
-
 //TODO update to validate game
 // module.exports.validateCreateClothingItem = celebrate({
 //   body: Joi.object().keys({
@@ -77,5 +76,11 @@ module.exports.validateUpdateUser = celebrate({
       "string.empty": 'The "imageUrl" field must be filled in',
       "string.uri": 'the "imageUrl" field must be a valid url',
     }),
+  }),
+});
+
+module.exports.validateAddGame = celebrate({
+  body: Joi.object().keys({
+    gameId: Joi.string().required().min(2).max(30),
   }),
 });

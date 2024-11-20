@@ -19,6 +19,7 @@ module.exports.auth = (req, res, next) => {
   }
 
   req.user = payload;
-  console.log(req.user);
+  console.log("User is authorized", req.user);
+  console.log(req.body);
   next();
 };

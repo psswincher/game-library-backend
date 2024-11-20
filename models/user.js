@@ -35,6 +35,18 @@ const userSchema = new mongoose.Schema({
     required: true,
     select: false,
   },
+  likedGames: {
+    type: [String],
+    required: true,
+  },
+  playedGames: {
+    type: [String],
+    required: true,
+  },
+  wantedGames: {
+    type: [String],
+    required: true,
+  },
 });
 
 userSchema.statics.findUserByCredentials = function findUserByCredentials({

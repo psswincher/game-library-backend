@@ -3,25 +3,10 @@ const validator = require("validator");
 
 const gameScheme = new mongoose.Schema({
   _id: String,
-  gameLength: {
-    type: String,
-    enum: [
-      "Short (~15 Mins)",
-      "Medium (~45 Mins)",
-      "Long (1-2 Hours)",
-      "Epic (2+ hours)",
-    ],
-    required: true,
-  },
-  title: {
+  name: {
     type: String,
     min: 2,
     max: 30,
-    required: true,
-  },
-  category: {
-    type: String,
-    enum: ["Competitive", "Cooperative", "Deception", "Social"],
     required: true,
   },
   status: {
@@ -29,26 +14,63 @@ const gameScheme = new mongoose.Schema({
     enum: ["On Shelf"],
     required: true,
   },
-  weight: {
-    type: Number,
-    enum: [1, 2, 3, 4, 5],
+  gameLength: {
+    type: String,
+    enum: ["20-30 Mins", "30-60 Mins", "1-2", "2+ hours"],
     required: true,
+  },
+  category: {
+    type: String,
+    enum: ["Competitive", "Cooperative", "Deception", "Social"],
+    required: true,
+  },
+  playerCount: {
+    type: [String],
+    required: true,
+    validate: {
+      validator: function (value) {
+        return value.length >= 1 && value.length <= 11;
+      },
+      message: "Players array must be between 1 and 11 entries",
+    },
+  },
+  playerCountSlug: {
+    type: String,
+    min: 2,
+    max: 20,
+    required: true,
+  },
+  complexity: {
+    type: String,
+    enum: [
+      "Lowest Complexity",
+      "Lightweight",
+      "Middleweight",
+      "Heavyweight",
+      "Top Complexity",
+    ],
+    required: true,
+  },
+  mechanics: {
+    type: [String],
+    required: true,
+    validate: {
+      validator: function (value) {
+        return value.length >= 1 && value.length <= 5;
+      },
+      message: "Mechanics array must have between 1 and 5 entries.",
+    },
   },
   fullDescription: {
     type: String,
     min: 2,
+    max: 4000,
     required: true,
   },
   shortDescription: {
     type: String,
     min: 2,
-    max: 400,
-    required: true,
-  },
-  rating: {
-    type: Number,
-    min: 0,
-    max: 10,
+    max: 150,
     required: true,
   },
   imageUrl: {
@@ -56,8 +78,6 @@ const gameScheme = new mongoose.Schema({
     min: 2,
     required: true,
   },
-
-  //   imageFileId: { type: mongoose.Schema.Types.ObjectId, ref: "fs.files", required: true }
 });
 
 module.exports = mongoose.model("game", gameScheme);

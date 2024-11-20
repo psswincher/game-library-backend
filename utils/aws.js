@@ -7,12 +7,16 @@ const s3Client = new S3Client({ region: process.env.AWS_REGION });
 
 async function uploadImageFromAirtableToS3(game) {
   return new Promise((resolve, reject) => {
-    console.log(game.airtableImageUrl);
+    console.log(`Fetching Image from URL: ${game.airtableImageUrl}`);
 
     https
       .get(game.airtableImageUrl, (response) => {
         if (response.statusCode !== 200) {
-          reject(new Error(`Failed to get image: ${response.statusCode}`));
+          reject(
+            new Error(
+              `Airtable Image URL Bad Status Code: ${response.statusCode}`
+            )
+          );
           return;
         }
 
@@ -34,10 +38,10 @@ async function uploadImageFromAirtableToS3(game) {
           .then((data) => {
             resolve(data.Location);
           })
-          .catch((err) => reject(err));
+          .catch((err) => reject(new Error(`S3 Upload Error: ${err.message}`)));
       })
       .on("error", (err) => {
-        reject(new Error(`Failed to get image: ${err.message}`));
+        reject(new Error(`Failed to get image from Airtable: ${err.message}`));
       });
   });
 }
