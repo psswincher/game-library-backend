@@ -1,5 +1,7 @@
-Theory of Operations:
+# Game Libray Backend
 
-1. We manage an Airtable base of board games. Airtable is very easy for us to use on site and saves us the pain of building an entire custom frontend geared towards employees.
+This backend creates a mongodb that stores game data and user data. It pulls game data from an Airtable base, allowing adminstrators to manage their game data in a stable, pre-built environment.
 
-2. This backend pulls game data from airtable, including image download urls. It passes the game data to mongodb and uploads the images to an AWS S3 server.
+It pulls data from Airtable upon startup, including download links for game images stored in Airtable. It then passes those images from the download links to an AWS Bucket while matching generated links from the bucket to the database.
+
+Finally, it also stores user information, including emails, passwords and preferences for users to create their own profiles.
