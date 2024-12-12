@@ -5,7 +5,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const { errors } = require("celebrate");
 require("dotenv").config();
-// const helmet = require("helmet");
+const helmet = require("helmet");
 const { rateLimit } = require("express-rate-limit");
 // const { defineBackend } = require("@aws-amplify/backend");
 const { airtable } = require("./utils/airtableApi");
@@ -42,11 +42,11 @@ app.use(
     origin: "http://localhost:3000", // Allow only requests from this origin
   })
 );
-// app.use(helmet());
+app.use(helmet());
 
 app.use(limiter);
 app.use(bodyParser.json());
-// app.use(requestLogger);
+app.use(requestLogger);
 
 app.get("/crash-test", () => {
   setTimeout(() => {
@@ -54,19 +54,19 @@ app.get("/crash-test", () => {
   }, 0);
 });
 
-// app.use((req, next) => {
-//   console.log({
-//     method: req.method,
-//     url: req.originalUrl,
-//     headers: req.headers,
-//     body: req.body, // Ensure the body is available after parsing
-//   });
-// });
+app.use((req, next) => {
+  console.log({
+    method: req.method,
+    url: req.originalUrl,
+    headers: req.headers,
+    body: req.body, // Ensure the body is available after parsing
+  });
+});
 
 app.use("/", mainRouter);
 
-// app.use(errorLogger);
-// app.use(errors());
-// app.use("/", errorHandler);
+app.use(errorLogger);
+app.use(errors());
+app.use("/", errorHandler);
 
 app.listen(PORT);
