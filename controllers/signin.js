@@ -21,6 +21,9 @@ module.exports.signin = (req, res, next) => {
         name: user.name,
         avatar: user.avatar,
         email: user.email,
+        likedGames: user.likedGames,
+        playedGames: user.playedGames,
+        wantedGames: user.wantedGames,
       });
     })
     .catch(next);

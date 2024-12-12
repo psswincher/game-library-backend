@@ -18,9 +18,9 @@ const mongoConnection = mongoose.connection;
 
 mongoConnection.once("open", () => {
   gfsBucket = new GridFSBucket(mongoConnection.db, { bucketName: "images" });
-  // airtable.fetchTableRecords("tblw2Gr10ycjHuk5N").then((res) => {
-  //   GameManager.updateLibrary(res, gfsBucket);
-  // });
+  airtable.fetchTableRecords("tblw2Gr10ycjHuk5N").then((res) => {
+    GameManager.updateLibrary(res, gfsBucket);
+  });
 });
 
 const limiter = rateLimit({

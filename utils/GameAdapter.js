@@ -47,6 +47,14 @@ class FormattedGame {
     this.imageFileName = game.fields["Game Image"][0].filename;
     this.imageType = game.fields["Game Image"][0].type;
     this._id + "_" + this.airtableImageId;
+
+    this.isStrongArt = game.fields["Strong Art"]
+      ? game.fields["Strong Art"]
+      : false;
+    this.isFavorite = game.fields["Staff Favorite"]
+      ? game.fields["Staff Favorite"]
+      : false;
+    this.isFeatured = game.fields["Featured"] ? game.fields["Featured"] : false;
     // console.log(this);
   }
 }

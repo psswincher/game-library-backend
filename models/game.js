@@ -78,6 +78,18 @@ const gameScheme = new mongoose.Schema({
     min: 2,
     required: true,
   },
+  isFavorite: {
+    type: Boolean,
+    required: true,
+  },
+  isStrongArt: {
+    type: Boolean,
+    required: true,
+  },
+  isFeatured: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("game", gameScheme);
