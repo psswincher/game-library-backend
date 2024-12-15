@@ -5,3 +5,7 @@ This backend creates a mongodb that stores game data and user data. It pulls gam
 It pulls data from Airtable upon startup, including download links for game images stored in Airtable. It then passes those images from the download links to an AWS Bucket while matching generated links from the bucket to the database.
 
 Finally, it also stores user information, including emails, passwords and preferences for users to create their own profiles.
+
+## Setup
+
+Please create a .env file in the project root and include the AWS access and Airtable information sent to code review.
