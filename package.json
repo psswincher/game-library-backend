@@ -1,4 +1,23 @@
 {
+  "name": "game-library-backend",
+  "version": "1.0.0",
+  "description": "A backend that pulls data on startup from airtable, maintains a mongodb for that data, and then relays it to then relay to a reactjs frontend.",
+  "main": "app.js",
+  "scripts": {
+    "lint": "npx eslint .",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/psswincher/game-library-backend"
+  },
+  "author": "Preston Swincher",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/psswincher/game-library-backend/issues"
+  },
+  "homepage": "https://github.com/psswincher/game-library-backend#readme",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.688.0",
     "@aws-sdk/lib-storage": "^3.688.0",

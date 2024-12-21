@@ -1,6 +1,6 @@
 # Game Libray Backend
 
-This backend creates a mongodb that stores game data and user data. It pulls game data from an Airtable base, allowing adminstrators to manage their game data in a stable, pre-built environment.
+This backend creates a mongodb that stores game data and user data. It pulls game data from an Airtable base, allowing adminstrators to manage their game data in a stable, pre-built environment. This dame data is never edited by frontend users.
 
 It pulls data from Airtable upon startup, including download links for game images stored in Airtable. It then passes those images from the download links to an AWS Bucket while matching generated links from the bucket to the database.
 
