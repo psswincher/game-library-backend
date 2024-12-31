@@ -39,7 +39,7 @@ const { PORT = 3001 } = process.env;
 const app = express();
 app.use(
   cors({
-    origin: "https://www.gamelibtest.twilightparadox.com",
+    origin: "https://www.gamelibtest.twilightparadox.com/",
   })
 );
 
