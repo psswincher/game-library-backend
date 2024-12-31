@@ -39,29 +39,32 @@ const { PORT = 3001 } = process.env;
 const app = express();
 app.use(
   cors({
-    origin: "https://www.gamelibtest.twilightparadox.com",
+    origin: [
+      "http://localhost:3000",
+      "https://www.gamelibtest.twilightparadox.com",
+    ],
   })
 );
-
 app.use(helmet());
 
 app.use(limiter);
 app.use(bodyParser.json());
 app.use(requestLogger);
 
+// app.use((req, res, next) => {
+//   console.log({
+//     method: req.method,
+//     url: req.originalUrl,
+//     headers: req.headers,
+//     body: req.body, // Ensure the body is available after parsing
+//   });
+//   next();
+// });
+
 app.get("/crash-test", () => {
   setTimeout(() => {
     throw new Error("Server will crash now");
   }, 0);
-});
-
-app.use((req, next) => {
-  console.log({
-    method: req.method,
-    url: req.originalUrl,
-    headers: req.headers,
-    body: req.body, // Ensure the body is available after parsing
-  });
 });
 
 app.use("/", mainRouter);
