@@ -37,11 +37,7 @@ const { errorHandler } = require("./middlewares/errorHandler");
 const { PORT = 3001 } = process.env;
 
 const app = express();
-app.use(
-  cors({
-    origin: "http://localhost:3000", // Allow only requests from this origin
-  })
-);
+app.use(cors());
 app.use(helmet());
 
 app.use(limiter);
