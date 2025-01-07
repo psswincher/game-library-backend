@@ -9,9 +9,8 @@ const updateUserOptions = {
 
 module.exports.updateUser = (req, res, next) => {
   const updates = {};
-  const { name, avatar } = req.body;
+  const { name } = req.body;
   if (name) updates.name = name;
-  if (avatar) updates.avatar = avatar;
   if (updates) {
     User.findByIdAndUpdate(req.user, updates, updateUserOptions)
       .orFail(() => {
@@ -25,7 +24,6 @@ module.exports.updateUser = (req, res, next) => {
           user: {
             id: user._id,
             name: user.name,
-            avatar: user.avatar,
             email: user.email,
             likedGames: user.likedGames,
             playedGames: user.playedGames,
@@ -62,10 +60,10 @@ module.exports.getCurrentUser = (req, res, next) => {
         user: {
           id: user._id,
           name: user.name,
-          avatar: user.avatar,
           email: user.email,
           likedGames: user.likedGames,
           playedGames: user.playedGames,
+          wantedGames: user.wantedGames,
         },
       })
     )

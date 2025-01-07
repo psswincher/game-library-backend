@@ -5,11 +5,11 @@ const { BAD_REQUEST, NON_UNIQUE_SUBMISSION } = require("../utils/errors");
 const { JWT_SECRET } = require("../utils/config");
 
 module.exports.createUser = (req, res, next) => {
-  const { name, avatar, email, password } = req.body;
+  const { name, email, password } = req.body;
   bcrypt
     .hash(password, 10)
     .then((hash) =>
-      User.create({ name, avatar, email, password: hash })
+      User.create({ name, email, password: hash })
         .then((user) => {
           const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
             expiresIn: "7d",
@@ -20,7 +20,6 @@ module.exports.createUser = (req, res, next) => {
               _id: user._id,
               email: user.email,
               name: user.name,
-              avatar: user.avatar,
             },
           });
         })

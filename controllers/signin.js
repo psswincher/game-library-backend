@@ -19,7 +19,6 @@ module.exports.signin = (req, res, next) => {
         token,
         _id: user._id,
         name: user.name,
-        avatar: user.avatar,
         email: user.email,
         likedGames: user.likedGames,
         playedGames: user.playedGames,
