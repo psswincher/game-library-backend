@@ -9,7 +9,14 @@ module.exports.createUser = (req, res, next) => {
   bcrypt
     .hash(password, 10)
     .then((hash) =>
-      User.create({ name, email, password: hash })
+      User.create({
+        name,
+        email,
+        password: hash,
+        likedGames: [],
+        wantedGames: [],
+        playedGames: [],
+      })
         .then((user) => {
           const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
             expiresIn: "7d",
