@@ -1,4 +1,6 @@
-# Game Libray Backend
+# Game Library Browser - Backend
+This project can be viewed [live at here](https://www.gamelibtest.twilightparadox.com/).
+View a video tour of the project [here](https://www.loom.com/share/c3596f6ad1494fb89ee3715b2f96e77e).
 
 This backend creates a mongodb that stores game data and user data. It pulls game data from an Airtable base, allowing adminstrators to manage their game data in a stable, pre-built environment. This dame data is never edited by frontend users.
 
