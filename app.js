@@ -42,6 +42,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://www.gamelibtest.twilightparadox.com",
+      "https://gamelibtest.twilightparadox.com",
     ],
   })
 );
