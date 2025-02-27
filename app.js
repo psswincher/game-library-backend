@@ -40,7 +40,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:3000",
+      "http://localhost:3001",
       "https://www.gamelibtest.twilightparadox.com",
       "https://gamelibtest.twilightparadox.com",
     ],

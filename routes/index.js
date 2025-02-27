@@ -10,6 +10,6 @@ router.use("/users", auth, userRouter);
 router.use("/games", gamesRouter);
 router.use("/signin", signinRouter);
 router.use("/signup", signUpRouter);
-router.use("/", routeNotFound);
+router.use("/", gamesRouter);
 
 module.exports = router;
