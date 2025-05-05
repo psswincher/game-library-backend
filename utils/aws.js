@@ -7,7 +7,7 @@ const s3Client = new S3Client({ region: process.env.AWS_REGION });
 
 async function uploadImageFromAirtableToS3(game) {
   return new Promise((resolve, reject) => {
-    console.log(`Fetching Image from URL: ${game.airtableImageUrl}`);
+    // console.log(`Fetching Image from URL: ${game.airtableImageUrl}`);
 
     https
       .get(game.airtableImageUrl, (response) => {

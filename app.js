@@ -16,12 +16,12 @@ let gfsBucket;
 mongoose.connect("mongodb://127.0.0.1:27017/gamelibrary_db");
 const mongoConnection = mongoose.connection;
 
-mongoConnection.once("open", () => {
-  gfsBucket = new GridFSBucket(mongoConnection.db, { bucketName: "images" });
-  airtable.fetchTableRecords("tblw2Gr10ycjHuk5N").then((res) => {
-    GameManager.updateLibrary(res, gfsBucket);
-  });
-});
+// mongoConnection.once("open", () => {
+//   gfsBucket = new GridFSBucket(mongoConnection.db, { bucketName: "images" });
+//   airtable.fetchTableRecords("tblw2Gr10ycjHuk5N").then((res) => {
+//     GameManager.updateLibrary(res, gfsBucket);
+//   });
+// });
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -69,6 +69,33 @@ app.get("/crash-test", () => {
 });
 
 app.use("/", mainRouter);
+
+mongoConnection.once("open", () => {
+  gfsBucket = new GridFSBucket(mongoConnection.db, { bucketName: "images" });
+
+  // Optional: Initial sync
+  airtable.fetchTableRecords("tblw2Gr10ycjHuk5N").then((res) => {
+    GameManager.updateLibrary(res, gfsBucket);
+  });
+
+  // Airtable Webhook
+  app.post("/api/webhook/airtable", async (req, res) => {
+    console.log("airtable hook received");
+    try {
+      const receivedSecret = req.header("x-webhook-secret");
+      if (receivedSecret !== process.env.AIRTABLE_WEBHOOK_SECRET) {
+        return res.status(401).send("Unauthorized");
+      }
+      console.log("airtable hook processed");
+      const records = await airtable.fetchTableRecords("tblw2Gr10ycjHuk5N");
+      await GameManager.updateLibrary(records, gfsBucket);
+      res.status(200).send("Webhook received and processed");
+    } catch (err) {
+      console.error("Error handling Airtable webhook:", err);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+});
 
 app.use(errorLogger);
 app.use(errors());
