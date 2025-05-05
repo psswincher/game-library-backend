@@ -41,8 +41,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:3001",
-      "https://www.gamelibtest.twilightparadox.com",
-      "https://gamelibtest.twilightparadox.com",
+      "https://www.vigilantebarlibary.com",
+      "https://vigilantebarlibrary.com",
     ],
   })
 );
