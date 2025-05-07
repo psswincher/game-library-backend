@@ -90,6 +90,20 @@ const gameScheme = new mongoose.Schema({
     type: Boolean,
     required: true,
   },
+  howToPlayUrl: {
+    type: String,
+    validate: {
+      validator: function (value) {
+        // Allow empty or valid YouTube URL
+        return (
+          !value ||
+          (validator.isURL(value, { require_protocol: true }) &&
+            /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/.test(value))
+        );
+      },
+      message: "Must be a valid YouTube URL",
+    },
+  },
 });
 
 module.exports = mongoose.model("game", gameScheme);

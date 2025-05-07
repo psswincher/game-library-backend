@@ -54,8 +54,8 @@ class FormattedGame {
     this.isFavorite = game.fields["Staff Favorite"]
       ? game.fields["Staff Favorite"]
       : false;
-    this.isFeatured = game.fields["Featured"] ? game.fields["Featured"] : false;
-    // console.log(this);
+    this.isFeatured = game.fields["Featured"] || false;
+    this.howToPlayUrl = game.fields["YouTube How To Play"] || null;
   }
 }
 
